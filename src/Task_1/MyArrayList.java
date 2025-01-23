@@ -12,17 +12,14 @@ public class MyArrayList<T> {
         array = new Object[INITIAL_CAPACITY];
     }
 
-    // размер списка
     public int size() {
         return size;
     }
 
-    //проверка на пустоту
     public boolean isEmpty() {
         return size == 0;
     }
 
-    // очистка списка
     public void clear() {
         int i;
         for (i = 0; i < size; i++) {
@@ -31,8 +28,7 @@ public class MyArrayList<T> {
         size = 0;
     }
 
-    // изменение размера списка
-    private void increaseCapacity(int minCapacity) {
+    private void ensuranceCapacity(int minCapacity) {
         if (minCapacity > array.length) {
             int newCapacity = array.length * 2;
             if (newCapacity < minCapacity) { // проверка, достаточно ли нового размера для добавления элемента
@@ -42,10 +38,44 @@ public class MyArrayList<T> {
         }
     }
 
-    //добавление элемента в список
     public void add (T element) {
-        increaseCapacity(size + 1);
+        ensuranceCapacity(size + 1);
         array[size++] = element;
+    }
+
+    private void checkIndex(int index){
+        if (index < 0 || index >= size){
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        }
+    }
+
+    public void remove (int index){
+        checkIndex(index);
+        int countElem = size - index - 1;
+        if (countElem > 0) {
+            System.arraycopy(array, index + 1, array, index, countElem);
+        }
+        array[--size] = null;
+    }
+
+    public T get(int index){
+        checkIndex(index);
+        return (T) array[index];
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        int i;
+        for (i = 0; i < size; i++) {
+            sb.append(array[i]);
+            if (i < size - 1) {
+                sb.append(", ");
+            }
+        }
+        sb.append("]");
+        return sb.toString();
     }
 
 
@@ -53,9 +83,18 @@ public class MyArrayList<T> {
         MyArrayList<Integer> list = new MyArrayList<>();
         list.add(10);
         list.add(20);
-        list.add(30);
-        //System.out.println(list);  // [10, 20, 30]
-        System.out.println(list.size());  // 2
+        list.add(0);
+        list.add(5);
+        list.add(100);
+        System.out.println("Размер исходного списка: " + list.size());
+        System.out.println("Исходный список: " + list);
+        list.remove(3);
+        int el1 = list.get(1);
+        System.out.println("Элемент под индексом 1: " + el1);
+        list.add(52);
+        list.add(39);
+        System.out.println("Размер нового списка: " + list.size());
+        System.out.println("Новый список: " +list);
     }
 }
 
